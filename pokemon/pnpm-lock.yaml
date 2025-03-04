@@ -4,6 +4,8 @@ specifiers:
   '@emotion/react': ^11.14.0
   '@emotion/styled': ^11.14.0
   '@eslint/js': ^9.21.0
+  '@fontsource/roboto': ^5.2.5
+  '@mui/icons-material': ^6.4.6
   '@mui/material': ^6.4.6
   '@types/react': ^19.0.10
   '@types/react-dom': ^19.0.4
@@ -23,6 +25,8 @@ specifiers:
 dependencies:
   '@emotion/react': 11.14.0_cmnynwxg3ky26emhk6apxalvqe
   '@emotion/styled': 11.14.0_whpmy6wu3bl4ymcfc5akhmz2b4
+  '@fontsource/roboto': 5.2.5
+  '@mui/icons-material': 6.4.6_jvfw3fb2u3infcnyct6xoin73u
   '@mui/material': 6.4.6_qt3atnl77o3jbq6w3aveu2kdwi
   react: 19.0.0
   react-dom: 19.0.0_react@19.0.0
@@ -844,6 +848,10 @@ packages:
       levn: 0.4.1
     dev: true
 
+  /@fontsource/roboto/5.2.5:
+    resolution: {integrity: sha512-70r2UZ0raqLn5W+sPeKhqlf8wGvUXFWlofaDlcbt/S3d06+17gXKr3VNqDODB0I1ASme3dGT5OJj9NABt7OTZQ==}
+    dev: false
+
   /@humanfs/core/0.19.1:
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
     engines: {node: '>=18.18.0'}
@@ -899,6 +907,23 @@ packages:
 
   /@mui/core-downloads-tracker/6.4.6:
     resolution: {integrity: sha512-rho5Q4IscbrVmK9rCrLTJmjLjfH6m/NcqKr/mchvck0EIXlyYUB9+Z0oVmkt/+Mben43LMRYBH8q/Uzxj/c4Vw==}
+    dev: false
+
+  /@mui/icons-material/6.4.6_jvfw3fb2u3infcnyct6xoin73u:
+    resolution: {integrity: sha512-rGJBvIQQbQAlyKYljHQ8wAQS/K2/uYwvemcpygnAmCizmCI4zSF9HQPuiG8Ql4YLZ6V/uKjA3WHIYmF/8sV+pQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      '@mui/material': ^6.4.6
+      '@types/react': ^17.0.0 || ^18.0.0 || ^19.0.0
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.26.9
+      '@mui/material': 6.4.6_qt3atnl77o3jbq6w3aveu2kdwi
+      '@types/react': 19.0.10
+      react: 19.0.0
     dev: false
 
   /@mui/material/6.4.6_qt3atnl77o3jbq6w3aveu2kdwi:

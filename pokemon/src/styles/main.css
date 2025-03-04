@@ -2,20 +2,11 @@
 @import url(./normalize.css);
 @import url(./app.css);
 
-html {
-  font-family: var(--font-family-primary), sans-serif;
-  background-color: var(--second-color);
-}
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
-}
-
-h1 {
-  font-family: var(--font-family-second);
 }
 
 a {
