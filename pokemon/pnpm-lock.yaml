@@ -7,6 +7,7 @@ specifiers:
   '@fontsource/roboto': ^5.2.5
   '@mui/icons-material': ^6.4.6
   '@mui/material': ^6.4.6
+  '@types/node': ^22.13.9
   '@types/react': ^19.0.10
   '@types/react-dom': ^19.0.4
   '@vitejs/plugin-react': ^4.3.4
@@ -35,6 +36,7 @@ dependencies:
 
 devDependencies:
   '@eslint/js': 9.21.0
+  '@types/node': 22.13.9
   '@types/react': 19.0.10
   '@types/react-dom': 19.0.4_@types+react@19.0.10
   '@vitejs/plugin-react': 4.3.4_vite@6.2.0
@@ -44,7 +46,7 @@ devDependencies:
   globals: 15.15.0
   typescript: 5.7.3
   typescript-eslint: 8.25.0_5as6tcaa3466qojkpvmmmnib5i
-  vite: 6.2.0
+  vite: 6.2.0_@types+node@22.13.9
 
 packages:
 
@@ -1323,6 +1325,12 @@ packages:
       undici-types: 6.19.8
     dev: false
 
+  /@types/node/22.13.9:
+    resolution: {integrity: sha512-acBjXdRJ3A6Pb3tqnw9HZmyR3Fiol3aGxRCK1x3d+6CDAMjl7I649wpSd+yNURCjbOUGu9tqtLKnTGxmK6CyGw==}
+    dependencies:
+      undici-types: 6.20.0
+    dev: true
+
   /@types/parse-json/4.0.2:
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
     dev: false
@@ -1479,7 +1487,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.25.9_@babel+core@7.26.9
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 6.2.0
+      vite: 6.2.0_@types+node@22.13.9
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2592,6 +2600,10 @@ packages:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
     dev: false
 
+  /undici-types/6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
+    dev: true
+
   /unplugin/2.1.0:
     resolution: {integrity: sha512-us4j03/499KhbGP8BU7Hrzrgseo+KdfJYWcbcajCOqsAyb8Gk0Yn2kiUIcZISYCb1JFaZfIuG3b42HmguVOKCQ==}
     engines: {node: '>=18.12.0'}
@@ -2618,7 +2630,7 @@ packages:
       punycode: 2.3.1
     dev: true
 
-  /vite/6.2.0:
+  /vite/6.2.0_@types+node@22.13.9:
     resolution: {integrity: sha512-7dPxoo+WsT/64rDcwoOjk76XHj+TqNTIvHKcuMQ1k4/SeHDaQt5GFAeLYzrimZrMpn/O6DtdI03WUjdxuPM0oQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
@@ -2658,6 +2670,7 @@ packages:
       yaml:
         optional: true
     dependencies:
+      '@types/node': 22.13.9
       esbuild: 0.25.0
       postcss: 8.5.3
       rollup: 4.34.9
