@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { alpha, InputBase, styled } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -44,7 +45,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Searchbar = () => {
+interface SearchbarProps {
+  onSearch: (value: string) => void;
+}
+
+const Searchbar = ({ onSearch }: SearchbarProps) => {
   return (
     <Search sx={{ borderRadius: "50px" }}>
       <SearchIconWrapper>
@@ -53,9 +58,10 @@ const Searchbar = () => {
       <StyledInputBase
         placeholder="Search…"
         inputProps={{ "aria-label": "search" }}
+        onChange={(e) => onSearch(e.target.value)}
       />
     </Search>
   );
 };
 
-export default Searchbar;
+export default memo(Searchbar);

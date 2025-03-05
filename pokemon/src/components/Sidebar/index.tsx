@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   Box,
   Checkbox,
@@ -66,4 +67,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default memo(Sidebar);

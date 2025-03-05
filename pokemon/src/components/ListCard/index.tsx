@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Box, CircularProgress, ImageListItem } from "@mui/material";
 
 // Constants
@@ -13,7 +13,11 @@ interface Card {
   name: string;
 }
 
-const ListCard = () => {
+interface ListCardProps {
+  name: string;
+}
+
+const ListCard = ({ name }: ListCardProps) => {
   const [cards, setCards] = useState<Card[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -39,11 +43,18 @@ const ListCard = () => {
     [loading, hasMore]
   );
 
+  // Reset page and cards when search term changes
+  useEffect(() => {
+    setCards([]);
+    setHasMore(true);
+    setPage(1);
+  }, [name]);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const newCards = await getList(page, PAGE_SIZE);
+        const newCards = await getList(page, PAGE_SIZE, name);
 
         if (newCards.length < PAGE_SIZE) setHasMore(false);
 
@@ -60,7 +71,7 @@ const ListCard = () => {
     };
 
     fetchData();
-  }, [page]);
+  }, [page, name]);
 
   return (
     <Box
@@ -90,4 +101,4 @@ const ListCard = () => {
   );
 };
 
-export default ListCard;
+export default memo(ListCard);
