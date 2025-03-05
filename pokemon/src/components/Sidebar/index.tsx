@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 // Constants
-import { LIST_SUBTYPE, LIST_TYPE } from "../../constants/type";
+import { LIST_SUBTYPE, LIST_TYPE } from "../../constants/types";
 
 // Components
 import Select from "../Select";
