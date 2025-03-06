@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import {
   Box,
   Checkbox,
@@ -52,4 +52,4 @@ const Select = ({ title, list }: SelectProps) => {
   );
 };
 
-export default Select;
+export default memo(Select);

@@ -1,6 +1,8 @@
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { alpha, InputBase, styled } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import useDebounce from "../../hooks";
+import { useSearch } from "../../contexts";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -45,11 +47,21 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-interface SearchbarProps {
-  onSearch: (value: string) => void;
-}
+const Searchbar = () => {
+  const [searchValue, setSearchValue] = useState("");
+  const debouncedSearch = useDebounce(searchValue, 500);
+  const { setSearchValueDebounce } = useSearch();
 
-const Searchbar = ({ onSearch }: SearchbarProps) => {
+  const handleSearch = (e: { target: { value: string } }) => {
+    const value = e.target.value;
+
+    setSearchValue(value);
+  };
+
+  useEffect(() => {
+    setSearchValueDebounce(debouncedSearch);
+  }, [debouncedSearch]);
+
   return (
     <Search sx={{ borderRadius: "50px" }}>
       <SearchIconWrapper>
@@ -58,7 +70,7 @@ const Searchbar = ({ onSearch }: SearchbarProps) => {
       <StyledInputBase
         placeholder="Search…"
         inputProps={{ "aria-label": "search" }}
-        onChange={(e) => onSearch(e.target.value)}
+        onChange={handleSearch}
       />
     </Search>
   );
