@@ -5,25 +5,17 @@ import MainLayout from "../../layouts";
 
 // Components
 import { ListCard, Searchbar } from "../../components";
-import { useCallback, useState } from "react";
-import useDebounce from "../../hooks";
 
 const ProductPage = () => {
-  const [valueSearch, setValueSearch] = useState("");
-
-  const debouncedSearch = useDebounce(valueSearch, 500);
-
-  const handleSearch = useCallback((value: string) => {
-    setValueSearch(value);
-  }, []);
-
   return (
-    <MainLayout>
-      <Searchbar onSearch={handleSearch} />
-      <Box mt="48px">
-        <ListCard name={debouncedSearch} />
-      </Box>
-    </MainLayout>
+    <Box display="flex" gap="64px" height="100%">
+      <MainLayout>
+        <Searchbar />
+        <Box mt="48px">
+          <ListCard />
+        </Box>
+      </MainLayout>
+    </Box>
   );
 };
 

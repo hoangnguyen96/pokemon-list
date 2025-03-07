@@ -1,80 +1,40 @@
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { Box, CircularProgress, ImageListItem } from "@mui/material";
 
-// Constants
-import { PAGE_SIZE } from "../../constants";
+// Contexts
+import { useListCard } from "../../contexts";
 
-// Services
-import { getList } from "../../services";
+const ListCard = () => {
+  const { cards, page, loading, hasMore, setPage, fetchData } = useListCard();
 
-interface Card {
-  id: string;
-  images: { small: string };
-  name: string;
-}
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-interface ListCardProps {
-  name: string;
-}
+  const handleScroll = useCallback(() => {
+    if (loading || !hasMore || !containerRef.current) return;
 
-const ListCard = ({ name }: ListCardProps) => {
-  const [cards, setCards] = useState<Card[]>([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
 
-  const observer = useRef<IntersectionObserver | null>(null);
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+      setPage((prev: number) => prev + 1);
+    }
+  }, [loading, hasMore, setPage]);
 
-  const lastItemRef = useCallback(
-    (node: HTMLLIElement | null) => {
-      if (loading || !hasMore) return;
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-      if (observer.current) observer.current.disconnect();
-
-      // Increment page when reaching end of list
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          setPage((prev) => prev + 1);
-        }
-      });
-
-      if (node) observer.current.observe(node);
-    },
-    [loading, hasMore]
-  );
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   // Reset page and cards when search term changes
   useEffect(() => {
-    setCards([]);
-    setHasMore(true);
-    setPage(1);
-  }, [name]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const newCards = await getList(page, PAGE_SIZE, name);
-
-        if (newCards.length < PAGE_SIZE) setHasMore(false);
-
-        setCards((prev) => {
-          const uniqueCards = new Map(
-            [...prev, ...newCards].map((c) => [c.id, c])
-          );
-          return Array.from(uniqueCards.values());
-        });
-      } catch (error) {
-        console.error("Error fetching Pokémon cards:", error);
-      }
-      setLoading(false);
-    };
-
     fetchData();
-  }, [page, name]);
+  }, [page]);
 
   return (
     <Box
+      ref={containerRef}
       display="flex"
       flexDirection="column"
       width="100%"
@@ -82,12 +42,8 @@ const ListCard = ({ name }: ListCardProps) => {
       overflow="hidden scroll"
     >
       <Box display="flex" gap="24px" flexWrap="wrap">
-        {cards.map((card, index) => (
-          <ImageListItem
-            key={card.id}
-            sx={{ width: "262px", height: "347px" }}
-            ref={index === cards.length - 1 ? lastItemRef : null}
-          >
+        {cards.map((card) => (
+          <ImageListItem key={card.id} sx={{ width: "262px", height: "347px" }}>
             <img src={card.images.small} alt={card.name} loading="lazy" />
           </ImageListItem>
         ))}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import {
   Box,
   Checkbox,
@@ -40,8 +40,9 @@ const Select = ({ title, list }: SelectProps) => {
       {/* Dropdown List */}
       {isOpen && (
         <FormGroup>
-          {list.map((item) => (
+          {list.map((item, index) => (
             <FormControlLabel
+              key={index}
               control={<Checkbox sx={{ p: "6px" }} />}
               label={item.label}
             />
@@ -52,4 +53,4 @@ const Select = ({ title, list }: SelectProps) => {
   );
 };
 
-export default Select;
+export default memo(Select);

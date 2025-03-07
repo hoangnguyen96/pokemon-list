@@ -1,5 +1,6 @@
-import React from "react";
+import React, { memo } from "react";
 import { Box, Chip, Paper, styled, Typography } from "@mui/material";
+import { useSearch } from "../../contexts";
 
 interface ChipData {
   key: number;
@@ -11,6 +12,9 @@ const ListItem = styled("li")(({ theme }) => ({
 }));
 
 const KeywordsBox = () => {
+  const { searchValue } = useSearch();
+  console.log("Search value:", searchValue);
+
   const [chipData, setChipData] = React.useState<readonly ChipData[]>([
     { key: 0, label: "Spring" },
     { key: 1, label: "Smart" },
@@ -58,4 +62,4 @@ const KeywordsBox = () => {
   );
 };
 
-export default KeywordsBox;
+export default memo(KeywordsBox);
