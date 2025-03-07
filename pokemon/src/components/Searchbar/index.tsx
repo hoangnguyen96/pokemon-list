@@ -1,6 +1,7 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { alpha, InputBase, styled } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { useSearch } from "../../contexts";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -45,11 +46,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-interface SearchbarProps {
-  onSearch: (value: string) => void;
-}
+const Searchbar = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const { setSearchValue } = useSearch();
 
-const Searchbar = ({ onSearch }: SearchbarProps) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    setSearchTerm(value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setSearchValue(searchTerm);
+    }
+  };
+
   return (
     <Search sx={{ borderRadius: "50px" }}>
       <SearchIconWrapper>
@@ -58,7 +70,9 @@ const Searchbar = ({ onSearch }: SearchbarProps) => {
       <StyledInputBase
         placeholder="Search…"
         inputProps={{ "aria-label": "search" }}
-        onChange={(e) => onSearch(e.target.value)}
+        value={searchTerm}
+        onChange={handleSearch}
+        onKeyDown={handleKeyDown}
       />
     </Search>
   );
