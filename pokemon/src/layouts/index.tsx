@@ -6,12 +6,12 @@ import { CardsProvider, SearchProvider } from "../contexts";
 const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
     <Box display="flex" gap="64px" width="100%" height="100%">
-      <CardsProvider>
-        <SearchProvider>
+      <SearchProvider>
+        <CardsProvider>
           <Sidebar />
           <Box flex="1">{children}</Box>
-        </SearchProvider>
-      </CardsProvider>
+        </CardsProvider>
+      </SearchProvider>
     </Box>
   );
 };

@@ -1,21 +1,27 @@
-import { createContext, ReactNode, useContext, useReducer } from "react";
-import { SearchContextProps, searchReducer, SearchState } from "./reducer";
+import { createContext, ReactNode, useContext, useState } from "react";
+
+interface SearchContextProps {
+  searchValues: string[];
+  addSearchValue: (value: string) => void;
+  removeSearchValue: (value: string) => void;
+}
 
 const SearchContext = createContext<SearchContextProps | undefined>(undefined);
 
-const initialState: SearchState = {
-  searchValue: "",
-};
-
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
-  const [state, dispatch] = useReducer(searchReducer, initialState);
+  const [searchValues, setSearchValues] = useState<string[]>([]);
 
-  const setSearchValue = (value: string) => {
-    dispatch({ type: "SET_SEARCH", payload: value });
+  const addSearchValue = (value: string) => {
+    if (value.trim() === "" || searchValues.includes(value)) return;
+    setSearchValues((prev) => [...prev, value]);
+  };
+
+  const removeSearchValue = (value: string) => {
+    setSearchValues((prev) => prev.filter((item) => item !== value));
   };
 
   return (
-    <SearchContext value={{ ...state, setSearchValue }}>
+    <SearchContext value={{ searchValues, addSearchValue, removeSearchValue }}>
       {children}
     </SearchContext>
   );

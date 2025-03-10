@@ -21,11 +21,11 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
   position: "absolute",
-  pointerEvents: "none",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   right: 0,
+  zIndex: 1,
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -48,31 +48,34 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Searchbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { setSearchValue } = useSearch();
+  const { addSearchValue } = useSearch();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    setSearchTerm(value);
+    if (value !== searchTerm) {
+      setSearchTerm(value);
+    }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      setSearchValue(searchTerm);
+  const addSearchKeywords = () => {
+    if (searchTerm.trim() !== "") {
+      addSearchValue(searchTerm);
+      setSearchTerm("");
     }
   };
 
   return (
     <Search sx={{ borderRadius: "50px" }}>
       <SearchIconWrapper>
-        <SearchIcon />
+        <SearchIcon sx={{ cursor: "pointer" }} onClick={addSearchKeywords} />
       </SearchIconWrapper>
       <StyledInputBase
         placeholder="Search…"
         inputProps={{ "aria-label": "search" }}
         value={searchTerm}
         onChange={handleSearch}
-        onKeyDown={handleKeyDown}
+        onKeyDown={(e) => e.key === "Enter" && addSearchKeywords()}
       />
     </Search>
   );
