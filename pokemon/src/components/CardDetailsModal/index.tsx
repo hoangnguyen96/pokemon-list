@@ -1,18 +1,24 @@
-import { memo } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { Box, Chip, Modal, Typography } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import temporary from "../../assets/temporary.png";
 import { StarIcon } from "../../themes/icons";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-interface DetailsProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+const Details = forwardRef((_, ref) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-const Details = ({ isOpen, onClose }: DetailsProps) => {
+  useImperativeHandle(
+    ref,
+    () => ({
+      openModal: () => setIsOpen(true),
+      closeModal: () => setIsOpen(false),
+    }),
+    []
+  );
+
   return (
-    <Modal open={isOpen} onClose={onClose}>
+    <Modal open={isOpen} onClose={() => setIsOpen(false)}>
       <Box
         display="flex"
         gap="64px"
@@ -162,6 +168,6 @@ const Details = ({ isOpen, onClose }: DetailsProps) => {
       </Box>
     </Modal>
   );
-};
+});
 
-export default memo(Details);
+export default Details;

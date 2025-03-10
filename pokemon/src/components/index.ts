@@ -4,3 +4,4 @@ export { default as KeywordsBox } from "./KeywordsBox";
 export { default as ListCard } from "./ListCard";
 export { default as FormSearchHP } from "./FormSearchHP";
 export { default as SuperTypes } from "./SuperTypes";
+export { default as CardDetailsModal } from "./CardDetailsModal";
