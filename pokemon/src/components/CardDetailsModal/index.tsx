@@ -20,17 +20,17 @@ const Details = forwardRef((_, ref) => {
   return (
     <Modal open={isOpen} onClose={() => setIsOpen(false)}>
       <Box
-        display="flex"
-        gap="64px"
-        p="64px"
-        width="100%"
-        maxWidth="1200px"
-        bgcolor="white"
-        borderRadius="12px"
-        position="absolute"
-        top="50%"
-        left="50%"
         sx={{
+          display: "flex",
+          gap: "64px",
+          p: "64px",
+          width: "100%",
+          maxWidth: "1200px",
+          bgcolor: "white",
+          borderRadius: "12px",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
           transform: "translate(-50%, -50%);",
         }}
       >
