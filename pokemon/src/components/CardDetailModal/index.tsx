@@ -1,28 +1,44 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { useState } from "react";
 import { Box, Chip, Modal, Typography } from "@mui/material";
 
+// Services
+import { getData } from "../../services";
+
+// Interfaces
+import { ICard } from "../../interfaces";
+
+// Components
 import temporary from "../../assets/temporary.png";
 import { StarIcon } from "../../themes/icons";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-const Details = forwardRef((_, ref) => {
-  const [isOpen, setIsOpen] = useState(false);
+export type CardDetailModalProps = {
+  ref: {
+    openModal: (id: string) => void;
+    closeModal: () => void;
+  };
+};
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      openModal: () => setIsOpen(true),
-      closeModal: () => setIsOpen(false),
-    }),
-    []
-  );
+const CardDetailModal = ({ ref }: CardDetailModalProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState<ICard>({} as ICard);
+
+  ref.openModal = async (id: string) => {
+    const data = await getData(`/${id}`);
+    setData(data);
+    setIsOpen(true);
+  };
+
+  ref.closeModal = () => setIsOpen(false);
+
+  const { name, images, hp, abilities, attacks, types } = data;
 
   return (
     <Modal open={isOpen} onClose={() => setIsOpen(false)}>
       <Box
         sx={{
           display: "flex",
-          gap: "64px",
+          gap: "12px",
           p: "64px",
           width: "100%",
           maxWidth: "1200px",
@@ -43,24 +59,28 @@ const Details = forwardRef((_, ref) => {
           }}
         >
           <img
-            src={temporary}
+            src={images?.large || temporary}
             alt="Image temporary"
             loading="lazy"
-            style={{ width: "100%", height: "554px", objectFit: "cover" }}
+            style={{ width: "80%", height: "554px", objectFit: "cover" }}
           />
         </Box>
         <Box display="flex" flexDirection="column" gap="24px" flex={1}>
           <Box display="flex" flexDirection="column" gap="16px">
             <Typography variant="h1" fontSize="24px" fontWeight="bold">
-              Venusaur-EX
+              {name || ""}
             </Typography>
             <Box display="flex" gap="8px">
-              <Chip label="Grass" sx={{ bgcolor: "#CFF7D3" }} />
-              <Chip label="Basic" sx={{ bgcolor: "#CFF7D3" }} />
-              <Chip label="EX" sx={{ bgcolor: "#CFF7D3" }} />
+              {types ? (
+                types.map((item) => (
+                  <Chip label={item} sx={{ bgcolor: "#CFF7D3" }} />
+                ))
+              ) : (
+                <Box />
+              )}
             </Box>
             <Typography variant="h2" fontSize="48px" fontWeight="bold">
-              HP: 180
+              HP: {hp}
             </Typography>
           </Box>
           <Box
@@ -87,13 +107,8 @@ const Details = forwardRef((_, ref) => {
                 <ArrowDropDownIcon />
               </Box>
             </Box>
-
             <Typography variant="body1" fontSize="16px">
-              It is a long established fact that a reader will be distracted by
-              the readable content of a page when looking at its layout. The
-              point of using Lorem Ipsum is that it has a more-or-less normal
-              distribution of letters, as opposed to using 'Content here,
-              content here'
+              {abilities?.[0]?.text || ""}
             </Typography>
 
             <Box
@@ -136,7 +151,7 @@ const Details = forwardRef((_, ref) => {
                 </Typography>
               </Box>
               <Typography variant="caption" fontSize="16px">
-                60
+                {attacks?.[0]?.damage || 0}
               </Typography>
             </Box>
 
@@ -154,20 +169,18 @@ const Details = forwardRef((_, ref) => {
                 </Typography>
               </Box>
               <Typography variant="caption" fontSize="16px">
-                100
+                {attacks?.[1]?.damage || 0}
               </Typography>
             </Box>
 
             <Typography variant="body1" fontSize="16px">
-              There are many variations of passages of Lorem Ipsum available,
-              but the majority have suffered alteration in some form, by
-              injected humour
+              {attacks?.[0]?.text || ""}
             </Typography>
           </Box>
         </Box>
       </Box>
     </Modal>
   );
-});
+};
 
-export default Details;
+export default CardDetailModal;
