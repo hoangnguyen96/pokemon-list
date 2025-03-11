@@ -2,13 +2,14 @@ import { memo, useCallback, useEffect, useRef } from "react";
 import { Box, CircularProgress } from "@mui/material";
 
 // Contexts
-import { useListCard } from "../../contexts";
+import { useListCard, useSearch } from "../../contexts";
 
 // Components
 import CardDetailModal, { CardDetailModalProps } from "../CardDetailModal";
 
 const ListCard = () => {
   const { cards, page, loading, hasMore, setPage, fetchData } = useListCard();
+  const { searchValues } = useSearch();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const modalRef = useRef<CardDetailModalProps["ref"]>({
@@ -34,10 +35,14 @@ const ListCard = () => {
     return () => container.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Reset page and cards when search term changes
   useEffect(() => {
-    fetchData();
-  }, [page]);
+    setPage(1);
+  }, [searchValues]);
+
+  // Fetch data
+  useEffect(() => {
+    fetchData(searchValues);
+  }, [page, searchValues]);
 
   return (
     <>

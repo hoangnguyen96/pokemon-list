@@ -1,4 +1,5 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useReducer } from "react";
+import { searchReducer } from "./reducer";
 
 interface SearchContextProps {
   searchValues: string[];
@@ -9,19 +10,21 @@ interface SearchContextProps {
 const SearchContext = createContext<SearchContextProps | undefined>(undefined);
 
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
-  const [searchValues, setSearchValues] = useState<string[]>([]);
+  const [state, dispatch] = useReducer(searchReducer, { searchValues: [] });
 
-  const addSearchValue = (value: string) => {
-    if (value.trim() === "" || searchValues.includes(value)) return;
-    setSearchValues((prev) => [...prev, value]);
-  };
+  const addSearchValue = (value: string) => dispatch({ type: "ADD", value });
 
-  const removeSearchValue = (value: string) => {
-    setSearchValues((prev) => prev.filter((item) => item !== value));
-  };
+  const removeSearchValue = (value: string) =>
+    dispatch({ type: "REMOVE", value });
 
   return (
-    <SearchContext value={{ searchValues, addSearchValue, removeSearchValue }}>
+    <SearchContext
+      value={{
+        searchValues: state.searchValues,
+        addSearchValue,
+        removeSearchValue,
+      }}
+    >
       {children}
     </SearchContext>
   );

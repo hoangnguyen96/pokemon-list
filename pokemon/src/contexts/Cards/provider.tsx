@@ -14,6 +14,7 @@ import { getData } from "../../services";
 
 // Reducer
 import { cardsReducer, CardsContextProps, CardsState } from "./reducer";
+import { generateSearchQuery } from "../../utils";
 
 const CardsContext = createContext<CardsContextProps | undefined>(undefined);
 
@@ -28,27 +29,33 @@ export const CardsProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(cardsReducer, initialState);
 
   // Fetch data function
-  const fetchData = useCallback(async () => {
-    dispatch({ type: "UPDATE_STATE", payload: { loading: true } });
+  const fetchData = useCallback(
+    async (params?: string[]) => {
+      dispatch({ type: "UPDATE_STATE", payload: { loading: true } });
 
-    try {
-      const url = `?page=${state.page}&pageSize=${PAGE_SIZE}`;
-      const newCards = await getData(url);
+      try {
+        const url = `?${params ? `${generateSearchQuery(params)}&` : ""}page=${
+          state.page
+        }&pageSize=${PAGE_SIZE}`;
 
-      dispatch({
-        type: "UPDATE_STATE",
-        payload: {
-          cards: [...state.cards, ...newCards],
-          hasMore: newCards.length >= PAGE_SIZE,
-          loading: false,
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching cards:", error);
-    }
+        const newCards = await getData(url);
 
-    dispatch({ type: "UPDATE_STATE", payload: { loading: false } });
-  }, [state.page, state.cards]);
+        dispatch({
+          type: "UPDATE_STATE",
+          payload: {
+            cards: state.page === 1 ? newCards : [...state.cards, ...newCards],
+            hasMore: newCards.length >= PAGE_SIZE,
+            loading: false,
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching cards:", error);
+      }
+
+      dispatch({ type: "UPDATE_STATE", payload: { loading: false } });
+    },
+    [state.page, state.cards]
+  );
 
   const setPage = useCallback(
     (page: number | ((prev: number) => number)) =>
