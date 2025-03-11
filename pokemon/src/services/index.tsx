@@ -3,16 +3,10 @@ import { ENDPOINT_URL, MESSAGES } from "../constants";
 const API_END_POINT = import.meta.env.VITE_APP_API_URL || "";
 const API_KEY = import.meta.env.VITE_APP_API_KEY || "";
 
-export const getList = async (
-  page: number,
-  pageSize: number,
-  name?: string
-) => {
+export const getData = async (params: string) => {
   try {
     const response = await fetch(
-      `${API_END_POINT}${ENDPOINT_URL.CARDS}?page=${page}&pageSize=${pageSize}${
-        name ? `&q=name:*${name}*` : ""
-      }`,
+      `${API_END_POINT}${ENDPOINT_URL.CARDS}${params ? `${params}` : ""}`,
       {
         method: "GET",
         headers: {

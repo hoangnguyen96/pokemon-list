@@ -1,4 +1,4 @@
-export interface Card {
+export interface ICard {
   id: string;
   name: string;
   supertype: string;
@@ -7,6 +7,7 @@ export interface Card {
   types: string[];
   evolvesFrom?: string;
   attacks?: Attack[];
+  abilities?: Ability[];
   weaknesses?: WeaknessResistance[];
   resistances?: WeaknessResistance[];
   retreatCost?: string[];
@@ -33,6 +34,12 @@ export interface Attack {
   damage: string;
   text: string;
 }
+
+type Ability = {
+  name: string;
+  text: string;
+  type: "Poké-Body" | "Poké-Power" | "Ability";
+};
 
 export interface WeaknessResistance {
   type: string;

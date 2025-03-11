@@ -1,13 +1,20 @@
 import { memo, useCallback, useEffect, useRef } from "react";
-import { Box, CircularProgress, ImageListItem } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 
 // Contexts
 import { useListCard } from "../../contexts";
+
+// Components
+import CardDetailModal, { CardDetailModalProps } from "../CardDetailModal";
 
 const ListCard = () => {
   const { cards, page, loading, hasMore, setPage, fetchData } = useListCard();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const modalRef = useRef<CardDetailModalProps["ref"]>({
+    openModal: () => {},
+    closeModal: () => {},
+  });
 
   const handleScroll = useCallback(() => {
     if (loading || !hasMore || !containerRef.current) return;
@@ -33,27 +40,54 @@ const ListCard = () => {
   }, [page]);
 
   return (
-    <Box
-      ref={containerRef}
-      display="flex"
-      flexDirection="column"
-      width="100%"
-      height="85vh"
-      overflow="hidden scroll"
-    >
-      <Box display="flex" gap="24px" flexWrap="wrap">
-        {cards.map((card) => (
-          <ImageListItem key={card.id} sx={{ width: "262px", height: "347px" }}>
-            <img src={card.images.small} alt={card.name} loading="lazy" />
-          </ImageListItem>
-        ))}
-      </Box>
+    <>
+      <Box
+        ref={containerRef}
+        display="flex"
+        flexDirection="column"
+        width="100%"
+        height="85vh"
+        overflow="hidden scroll"
+      >
+        <Box display="flex" gap="24px" flexWrap="wrap" padding="12px">
+          {cards.map((card) => (
+            <Box
+              key={card.id}
+              sx={{
+                width: "262px",
+                height: "347px",
+                cursor: "pointer",
+              }}
+              onClick={() => modalRef.current?.openModal(card.id)}
+            >
+              <img
+                src={card.images.small}
+                alt={card.name}
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "8px",
+                  transition: "transform 0.3s ease-in-out",
+                }}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.05)")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+              />
+            </Box>
+          ))}
+        </Box>
 
-      {/* Loading Indicator */}
-      {loading && (
-        <CircularProgress sx={{ mt: "32px", mx: "auto", color: "white" }} />
-      )}
-    </Box>
+        {/* Loading Indicator */}
+        {loading && (
+          <CircularProgress sx={{ mt: "32px", mx: "auto", color: "white" }} />
+        )}
+      </Box>
+      <CardDetailModal ref={modalRef.current} />
+    </>
   );
 };
 
