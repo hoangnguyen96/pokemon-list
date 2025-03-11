@@ -1,18 +1,14 @@
-export interface Card {
-  id: string;
-  images: { small: string };
-  name: string;
-}
+import { ICard } from "../../interfaces";
 
 export interface CardsState {
-  cards: Card[];
+  cards: ICard[];
   page: number;
   loading: boolean;
   hasMore: boolean;
 }
 
 export interface CardsContextProps extends CardsState {
-  fetchData: (name?: string) => Promise<void>;
+  fetchData: (params?: string[]) => Promise<void>;
   setPage: (page: number | ((prev: number) => number)) => void;
 }
 
