@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useReducer } from "react";
+import { createContext, ReactNode, useReducer } from "react";
 import { searchReducer } from "./reducer";
 
 interface SearchContextProps {
@@ -7,7 +7,9 @@ interface SearchContextProps {
   removeSearchValue: (value: string) => void;
 }
 
-const SearchContext = createContext<SearchContextProps | undefined>(undefined);
+export const SearchContext = createContext<SearchContextProps | undefined>(
+  undefined
+);
 
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(searchReducer, { searchValues: [] });
@@ -28,12 +30,4 @@ export const SearchProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </SearchContext>
   );
-};
-
-export const useSearch = () => {
-  const context = useContext(SearchContext);
-  if (!context) {
-    throw new Error("useSearch must be used within a SearchProvider");
-  }
-  return context;
 };

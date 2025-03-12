@@ -1,22 +1,11 @@
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useReducer,
-} from "react";
-
-// Constants
-import { PAGE_SIZE } from "../../constants";
-
-// Services
-import { getData } from "../../services";
+import { createContext, ReactNode, useReducer } from "react";
 
 // Reducer
 import { cardsReducer, CardsContextProps, CardsState } from "./reducer";
-import { generateSearchQuery } from "../../utils";
 
-const CardsContext = createContext<CardsContextProps | undefined>(undefined);
+export const CardsContext = createContext<CardsContextProps | undefined>(
+  undefined
+);
 
 const initialState: CardsState = {
   cards: [],
@@ -28,57 +17,5 @@ const initialState: CardsState = {
 export const CardsProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(cardsReducer, initialState);
 
-  // Fetch data function
-  const fetchData = useCallback(
-    async (params?: string[]) => {
-      dispatch({ type: "UPDATE_STATE", payload: { loading: true } });
-
-      try {
-        const url = `?${params ? `${generateSearchQuery(params)}&` : ""}page=${
-          state.page
-        }&pageSize=${PAGE_SIZE}`;
-
-        const newCards = await getData(url);
-
-        dispatch({
-          type: "UPDATE_STATE",
-          payload: {
-            cards: state.page === 1 ? newCards : [...state.cards, ...newCards],
-            hasMore: newCards.length >= PAGE_SIZE,
-            loading: false,
-          },
-        });
-      } catch (error) {
-        console.error("Error fetching cards:", error);
-      }
-
-      dispatch({ type: "UPDATE_STATE", payload: { loading: false } });
-    },
-    [state.page, state.cards]
-  );
-
-  const setPage = useCallback(
-    (page: number | ((prev: number) => number)) =>
-      dispatch({
-        type: "SET_PAGE",
-        payload: typeof page === "function" ? page(state.page) : page,
-      }),
-    [state.page]
-  );
-
-  return (
-    <CardsContext value={{ ...state, fetchData, setPage }}>
-      {children}
-    </CardsContext>
-  );
-};
-
-export const useListCard = () => {
-  const context = useContext(CardsContext);
-
-  if (!context) {
-    throw new Error("useListCard must be used within a CardsProvider");
-  }
-
-  return context;
+  return <CardsContext value={{ ...state, dispatch }}>{children}</CardsContext>;
 };
