@@ -48,7 +48,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Searchbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { addSearchValue } = useSearch();
+  const { dispatch } = useSearch();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -60,7 +60,7 @@ const Searchbar = () => {
 
   const addSearchKeywords = () => {
     if (searchTerm.trim() !== "") {
-      addSearchValue(searchTerm);
+      dispatch({ type: "ADD", value: searchTerm });
       setSearchTerm("");
     }
   };
