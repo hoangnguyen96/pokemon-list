@@ -1,6 +1,8 @@
 import { memo } from "react";
 import { Box, Chip, Paper, styled, Typography } from "@mui/material";
-import { useSearch } from "../../contexts";
+
+// Hooks
+import { useSearch } from "../../hooks";
 
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),

@@ -5,6 +5,7 @@ import MainLayout from "../../layouts";
 
 // Components
 import { ListCard, Searchbar } from "../../components";
+import { CardDetailProvider } from "../../contexts";
 
 const ProductPage = () => {
   return (
@@ -12,7 +13,9 @@ const ProductPage = () => {
       <MainLayout>
         <Searchbar />
         <Box mt="48px">
-          <ListCard />
+          <CardDetailProvider>
+            <ListCard />
+          </CardDetailProvider>
         </Box>
       </MainLayout>
     </Box>

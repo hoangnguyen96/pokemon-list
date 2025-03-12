@@ -1,3 +1,4 @@
+import { Dispatch } from "react";
 import { ICard } from "../../interfaces";
 
 export interface CardsState {
@@ -7,15 +8,13 @@ export interface CardsState {
   hasMore: boolean;
 }
 
-export interface CardsContextProps extends CardsState {
-  fetchData: (params?: string[]) => Promise<void>;
-  setPage: (page: number | ((prev: number) => number)) => void;
-}
-
-// Action types
 type Action =
   | { type: "SET_PAGE"; payload: number }
   | { type: "UPDATE_STATE"; payload: Partial<CardsState> };
+
+export interface CardsContextProps extends CardsState {
+  dispatch: Dispatch<Action>;
+}
 
 // Reducer function
 const cardsReducer = (state: CardsState, action: Action): CardsState => {

@@ -1,7 +1,7 @@
 import { memo, useState } from "react";
 import { alpha, InputBase, styled } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useSearch } from "../../contexts";
+import { useSearch } from "../../hooks";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",

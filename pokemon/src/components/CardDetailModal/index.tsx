@@ -1,37 +1,34 @@
-import { useState } from "react";
+import { RefObject, useImperativeHandle, useState } from "react";
 import { Box, Chip, Modal, Typography } from "@mui/material";
 
-// Services
-import { getData } from "../../services";
+// Hooks
+import { useCardDetail } from "../../hooks";
 
-// Interfaces
-import { ICard } from "../../interfaces";
-
-// Components
+// Icons
 import temporary from "../../assets/temporary.png";
 import { StarIcon } from "../../themes/icons";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-export type CardDetailModalProps = {
-  ref: {
-    openModal: (id: string) => void;
-    closeModal: () => void;
-  };
-};
+export type ModalRef = RefObject<{
+  openModal: () => void;
+  closeModal: () => void;
+} | null>;
 
-const CardDetailModal = ({ ref }: CardDetailModalProps) => {
+const CardDetailModal = ({ ref }: { ref: ModalRef }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState<ICard>({} as ICard);
+  const { getSelectedCard } = useCardDetail();
+  const selectedCard = getSelectedCard();
 
-  ref.openModal = async (id: string) => {
-    const data = await getData(`/${id}`);
-    setData(data);
-    setIsOpen(true);
-  };
+  useImperativeHandle(
+    ref,
+    () => ({
+      openModal: () => setIsOpen(true),
+      closeModal: () => setIsOpen(false),
+    }),
+    []
+  );
 
-  ref.closeModal = () => setIsOpen(false);
-
-  const { name, images, hp, abilities, attacks, types } = data;
+  const { name, images, hp, abilities, attacks, types } = selectedCard || {};
 
   return (
     <Modal open={isOpen} onClose={() => setIsOpen(false)}>
@@ -73,7 +70,7 @@ const CardDetailModal = ({ ref }: CardDetailModalProps) => {
             <Box display="flex" gap="8px">
               {types ? (
                 types.map((item) => (
-                  <Chip label={item} sx={{ bgcolor: "#CFF7D3" }} />
+                  <Chip key={item} label={item} sx={{ bgcolor: "#CFF7D3" }} />
                 ))
               ) : (
                 <Box />
