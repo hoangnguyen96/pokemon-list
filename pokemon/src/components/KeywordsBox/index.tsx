@@ -9,7 +9,7 @@ const ListItem = styled("li")(({ theme }) => ({
 }));
 
 const KeywordsBox = () => {
-  const { searchValues, removeSearchValue } = useSearch();
+  const { searchValues, dispatch } = useSearch();
 
   return (
     <Box>
@@ -44,7 +44,7 @@ const KeywordsBox = () => {
                   {label}
                 </Typography>
               }
-              onDelete={() => removeSearchValue(label)}
+              onDelete={() => dispatch({ type: "REMOVE", value: label })}
             />
           </ListItem>
         ))}

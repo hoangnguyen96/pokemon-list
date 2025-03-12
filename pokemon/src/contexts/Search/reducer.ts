@@ -2,7 +2,7 @@ interface SearchState {
   searchValues: string[];
 }
 
-type SearchAction =
+export type SearchAction =
   | { type: "ADD"; value: string }
   | { type: "REMOVE"; value: string };
 
