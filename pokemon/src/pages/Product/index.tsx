@@ -1,22 +1,22 @@
 import { Box } from "@mui/material";
 
+// Context
+import { CardDetailProvider } from "../../contexts";
+
 // Layouts
 import MainLayout from "../../layouts";
 
 // Components
-import { ListCard, Searchbar } from "../../components";
-import { CardDetailProvider } from "../../contexts";
+import { CardListWithModal, Searchbar } from "../../components";
 
 const ProductPage = () => {
   return (
     <Box display="flex" gap="64px" height="100%">
       <MainLayout>
         <Searchbar />
-        <Box mt="48px">
-          <CardDetailProvider>
-            <ListCard />
-          </CardDetailProvider>
-        </Box>
+        <CardDetailProvider>
+          <CardListWithModal />
+        </CardDetailProvider>
       </MainLayout>
     </Box>
   );

@@ -12,7 +12,7 @@ export const LIST_TYPE = [
 
 export const LIST_SUBTYPE = [
   {
-    label: "Break",
+    label: "BREAK",
   },
   {
     label: "Baby",

@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Box, CircularProgress } from "@mui/material";
 
 // Constants
@@ -13,10 +13,17 @@ import { useListCard, useSearch, useSetPage } from "../../hooks";
 // Utils
 import { generateSearchQuery } from "../../utils";
 
+// Interfaces
+import { ICard } from "../../interfaces";
+
 // Components
 import ItemCard from "../ItemCard";
 
-const ListCard = () => {
+interface ListCardProps {
+  onClickItemCard: (card: ICard) => void;
+}
+
+const ListCard = ({ onClickItemCard }: ListCardProps) => {
   const { cards, page, loading, hasMore, dispatch } = useListCard();
   const { searchValues } = useSearch();
   const setPage = useSetPage();
@@ -45,32 +52,32 @@ const ListCard = () => {
     setPage(1);
   }, [searchValues]);
 
-  // Fetch data
-  const fetchData = async () => {
-    dispatch({ type: "UPDATE_STATE", payload: { loading: true } });
-
-    try {
-      const url = `?${
-        searchValues ? `${generateSearchQuery(searchValues)}&` : ""
-      }page=${page}&pageSize=${PAGE_SIZE}`;
-      const newCards = await getData(url);
-
-      dispatch({
-        type: "UPDATE_STATE",
-        payload: {
-          cards: page === 1 ? newCards : [...cards, ...newCards],
-          hasMore: newCards.length >= PAGE_SIZE,
-          loading: false,
-        },
-      });
-    } catch (error) {
-      console.error("Error fetching cards:", error);
-    }
-
-    dispatch({ type: "UPDATE_STATE", payload: { loading: false } });
-  };
-
   useEffect(() => {
+    // Fetch data
+    const fetchData = async () => {
+      dispatch({ type: "UPDATE_STATE", payload: { loading: true } });
+
+      try {
+        const url = `?${
+          searchValues ? `${generateSearchQuery(searchValues)}&` : ""
+        }page=${page}&pageSize=${PAGE_SIZE}`;
+        const newCards = await getData(url);
+
+        dispatch({
+          type: "UPDATE_STATE",
+          payload: {
+            cards: page === 1 ? newCards : [...cards, ...newCards],
+            hasMore: newCards.length >= PAGE_SIZE,
+            loading: false,
+          },
+        });
+      } catch (error) {
+        console.error("Error fetching cards:", error);
+      }
+
+      dispatch({ type: "UPDATE_STATE", payload: { loading: false } });
+    };
+
     fetchData();
   }, [page, searchValues]);
 
@@ -85,7 +92,11 @@ const ListCard = () => {
     >
       <Box display="flex" gap="24px" flexWrap="wrap" padding="12px">
         {cards.map((card) => (
-          <ItemCard key={card.id} card={card} />
+          <ItemCard
+            key={card.id}
+            card={card}
+            onClick={() => onClickItemCard(card)}
+          />
         ))}
       </Box>
 
@@ -97,4 +108,4 @@ const ListCard = () => {
   );
 };
 
-export default memo(ListCard);
+export default ListCard;
