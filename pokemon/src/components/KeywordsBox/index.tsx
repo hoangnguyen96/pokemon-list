@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { Box, Chip, Paper, styled, Typography } from "@mui/material";
 
 // Hooks
@@ -10,6 +9,10 @@ const ListItem = styled("li")(({ theme }) => ({
 
 const KeywordsBox = () => {
   const { searchValues, dispatch } = useSearch();
+
+  const handleDelete = (value: string) => {
+    dispatch({ type: "REMOVE", value });
+  };
 
   return (
     <Box>
@@ -28,8 +31,8 @@ const KeywordsBox = () => {
         }}
         component="ul"
       >
-        {searchValues.map((label) => (
-          <ListItem key={label}>
+        {searchValues.map((value) => (
+          <ListItem key={value}>
             <Chip
               label={
                 <Typography
@@ -41,10 +44,10 @@ const KeywordsBox = () => {
                     display: "block",
                   }}
                 >
-                  {label}
+                  {value}
                 </Typography>
               }
-              onDelete={() => dispatch({ type: "REMOVE", value: label })}
+              onDelete={() => handleDelete(value)}
             />
           </ListItem>
         ))}
@@ -53,4 +56,4 @@ const KeywordsBox = () => {
   );
 };
 
-export default memo(KeywordsBox);
+export default KeywordsBox;

@@ -5,3 +5,4 @@ export { default as ListCard } from "./ListCard";
 export { default as FormSearchHP } from "./FormSearchHP";
 export { default as SuperTypes } from "./SuperTypes";
 export { default as CardDetailModal } from "./CardDetailModal";
+export { default as CardListWithModal } from "./CardListWithModal";

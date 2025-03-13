@@ -4,12 +4,13 @@ import { Box } from "@mui/material";
 // Interfaces
 import { ICard } from "../../interfaces";
 
-// Hooks
-import { useCardDetail } from "../../hooks";
+interface ItemCardProps {
+  card: ICard;
+  onClick: () => void;
+}
 
-const ItemCard = ({ card }: { card: ICard }) => {
-  const { openCardDetail } = useCardDetail();
-  const { images, name } = card;
+const ItemCard = ({ card, onClick }: ItemCardProps) => {
+  const { images, name } = card || {};
 
   return (
     <Box
@@ -18,10 +19,10 @@ const ItemCard = ({ card }: { card: ICard }) => {
         height: "347px",
         cursor: "pointer",
       }}
-      onClick={() => openCardDetail(card)}
+      onClick={onClick}
     >
       <img
-        src={images.small}
+        src={images?.small}
         alt={name}
         loading="lazy"
         style={{

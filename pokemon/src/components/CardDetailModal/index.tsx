@@ -16,8 +16,7 @@ export type ModalRef = RefObject<{
 
 const CardDetailModal = ({ ref }: { ref: ModalRef }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { getSelectedCard } = useCardDetail();
-  const selectedCard = getSelectedCard();
+  const card = useCardDetail();
 
   useImperativeHandle(
     ref,
@@ -28,10 +27,14 @@ const CardDetailModal = ({ ref }: { ref: ModalRef }) => {
     []
   );
 
-  const { name, images, hp, abilities, attacks, types } = selectedCard || {};
+  const handleCloseModal = () => {
+    setIsOpen(false);
+  };
+
+  const { name, images, hp, abilities, attacks, types } = card || {};
 
   return (
-    <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+    <Modal open={isOpen} onClose={handleCloseModal}>
       <Box
         sx={{
           display: "flex",
