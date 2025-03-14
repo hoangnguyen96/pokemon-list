@@ -1,16 +1,25 @@
-import { memo } from "react";
+import { memo, use } from "react";
 import { Box } from "@mui/material";
+
+// Context
+import { CardDetailDispatchContext, ModalContext } from "../../contexts";
 
 // Interfaces
 import { ICard } from "../../interfaces";
 
 interface ItemCardProps {
   card: ICard;
-  onClick: () => void;
 }
 
-const ItemCard = ({ card, onClick }: ItemCardProps) => {
+const ItemCard = ({ card }: ItemCardProps) => {
   const { images, name } = card || {};
+  const setCard = use(CardDetailDispatchContext);
+  const modalRef = use(ModalContext);
+
+  const handleClick = () => {
+    setCard?.(card);
+    modalRef?.current?.openModal();
+  };
 
   return (
     <Box
@@ -19,7 +28,7 @@ const ItemCard = ({ card, onClick }: ItemCardProps) => {
         height: "347px",
         cursor: "pointer",
       }}
-      onClick={onClick}
+      onClick={handleClick}
     >
       <img
         src={images?.small}
