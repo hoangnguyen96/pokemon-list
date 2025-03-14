@@ -1,7 +1,9 @@
-import { memo, useState } from "react";
+import { memo, use, useState } from "react";
 import { alpha, InputBase, styled } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useSearch } from "../../hooks";
+
+// Context
+import { SearchDispatchContext } from "../../contexts";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -33,7 +35,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     flex: 1,
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
@@ -48,7 +49,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Searchbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { dispatch } = useSearch();
+  const dispatch = use(SearchDispatchContext);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
