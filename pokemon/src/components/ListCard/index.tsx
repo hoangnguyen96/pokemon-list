@@ -18,7 +18,7 @@ import ItemCard from "../ItemCard";
 
 const ListCard = () => {
   const { cards, page, loading, hasMore, dispatch } = useListCard();
-  const { searchValues } = useSearch();
+  const searchValues = useSearch();
   const setPage = useSetPage();
 
   const containerRef = useRef<HTMLDivElement | null>(null);

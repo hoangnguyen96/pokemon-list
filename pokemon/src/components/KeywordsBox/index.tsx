@@ -1,4 +1,8 @@
+import { use } from "react";
 import { Box, Chip, Paper, styled, Typography } from "@mui/material";
+
+// Context
+import { SearchDispatchContext } from "../../contexts";
 
 // Hooks
 import { useSearch } from "../../hooks";
@@ -8,7 +12,8 @@ const ListItem = styled("li")(({ theme }) => ({
 }));
 
 const KeywordsBox = () => {
-  const { searchValues, dispatch } = useSearch();
+  const searchValues = useSearch();
+  const dispatch = use(SearchDispatchContext);
 
   const handleDelete = (value: string) => {
     dispatch({ type: "REMOVE", value });
