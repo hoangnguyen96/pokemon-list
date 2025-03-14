@@ -13,17 +13,10 @@ import { useListCard, useSearch, useSetPage } from "../../hooks";
 // Utils
 import { generateSearchQuery } from "../../utils";
 
-// Interfaces
-import { ICard } from "../../interfaces";
-
 // Components
 import ItemCard from "../ItemCard";
 
-interface ListCardProps {
-  onClickItemCard: (card: ICard) => void;
-}
-
-const ListCard = ({ onClickItemCard }: ListCardProps) => {
+const ListCard = () => {
   const { cards, page, loading, hasMore, dispatch } = useListCard();
   const { searchValues } = useSearch();
   const setPage = useSetPage();
@@ -92,11 +85,7 @@ const ListCard = ({ onClickItemCard }: ListCardProps) => {
     >
       <Box display="flex" gap="24px" flexWrap="wrap" padding="12px">
         {cards.map((card) => (
-          <ItemCard
-            key={card.id}
-            card={card}
-            onClick={() => onClickItemCard(card)}
-          />
+          <ItemCard key={card.id} card={card} />
         ))}
       </Box>
 
