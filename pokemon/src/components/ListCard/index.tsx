@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { use, useCallback, useEffect, useRef } from "react";
 import { Box, CircularProgress } from "@mui/material";
 
 // Constants
@@ -8,19 +8,20 @@ import { PAGE_SIZE } from "../../constants";
 import { getData } from "../../services";
 
 // Hooks
-import { useListCard, useSearch, useSetPage } from "../../hooks";
+import { useListCard } from "../../hooks";
 
 // Utils
 import { generateSearchQuery } from "../../utils";
+
+// Contexts
+import { CardsDispatchContext } from "../../contexts";
 
 // Components
 import ItemCard from "../ItemCard";
 
 const ListCard = () => {
-  const { cards, page, loading, hasMore, dispatch } = useListCard();
-  const searchValues = useSearch();
-  const setPage = useSetPage();
-
+  const { cards, page, loading, hasMore, searchValues } = useListCard();
+  const dispatch = use(CardsDispatchContext);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const handleScroll = useCallback(() => {
@@ -29,9 +30,9 @@ const ListCard = () => {
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
 
     if (scrollTop + clientHeight >= scrollHeight - 100) {
-      setPage((prev: number) => prev + 1);
+      dispatch({ type: "SET_PAGE", payload: Number(page + 1) });
     }
-  }, [loading, hasMore, setPage]);
+  }, [loading, hasMore, dispatch]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -42,14 +43,7 @@ const ListCard = () => {
   }, [handleScroll]);
 
   useEffect(() => {
-    setPage(1);
-  }, [searchValues]);
-
-  useEffect(() => {
-    // Fetch data
     const fetchData = async () => {
-      dispatch({ type: "UPDATE_STATE", payload: { loading: true } });
-
       try {
         const url = `?${
           searchValues ? `${generateSearchQuery(searchValues)}&` : ""

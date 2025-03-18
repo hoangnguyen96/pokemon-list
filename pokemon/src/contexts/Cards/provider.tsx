@@ -1,21 +1,35 @@
-import { createContext, ReactNode, useReducer } from "react";
+import { createContext, Dispatch, ReactNode, useReducer } from "react";
 
-// Reducer
-import { cardsReducer, CardsContextProps, CardsState } from "./reducer";
+// Stores
+import { Action, cardsReducer, CardsState } from "../../stores";
 
-export const CardsContext = createContext<CardsContextProps | undefined>(
+type SearchContext = string[];
+
+export const CardsContext = createContext<CardsState | undefined>(undefined);
+
+export const SearchContext = createContext<SearchContext | undefined>(
   undefined
 );
+
+export const CardsDispatchContext = createContext<Dispatch<Action>>(() => {});
 
 const initialState: CardsState = {
   cards: [],
   page: 1,
-  loading: false,
+  loading: true,
   hasMore: true,
+  searchValues: [],
 };
 
 export const CardsProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(cardsReducer, initialState);
+  const { searchValues } = state;
 
-  return <CardsContext value={{ ...state, dispatch }}>{children}</CardsContext>;
+  return (
+    <SearchContext value={searchValues}>
+      <CardsContext value={state}>
+        <CardsDispatchContext value={dispatch}>{children}</CardsDispatchContext>
+      </CardsContext>
+    </SearchContext>
+  );
 };

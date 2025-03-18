@@ -2,21 +2,18 @@ import { use } from "react";
 import { Box, Chip, Paper, styled, Typography } from "@mui/material";
 
 // Context
-import { SearchDispatchContext } from "../../contexts";
-
-// Hooks
-import { useSearch } from "../../hooks";
+import { CardsDispatchContext, SearchContext } from "../../contexts";
 
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
 }));
 
 const KeywordsBox = () => {
-  const searchValues = useSearch();
-  const dispatch = use(SearchDispatchContext);
+  const searchValues = use(SearchContext);
+  const dispatch = use(CardsDispatchContext);
 
   const handleDelete = (value: string) => {
-    dispatch({ type: "REMOVE", value });
+    dispatch({ type: "REMOVE_SEARCH", value });
   };
 
   return (
@@ -36,7 +33,7 @@ const KeywordsBox = () => {
         }}
         component="ul"
       >
-        {searchValues.map((value) => (
+        {searchValues?.map((value) => (
           <ListItem key={value}>
             <Chip
               label={
