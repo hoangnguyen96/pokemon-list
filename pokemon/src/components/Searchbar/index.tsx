@@ -3,7 +3,7 @@ import { alpha, InputBase, styled } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 // Context
-import { SearchDispatchContext } from "../../contexts";
+import { CardsDispatchContext } from "../../contexts";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -49,7 +49,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Searchbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const dispatch = use(SearchDispatchContext);
+  const dispatch = use(CardsDispatchContext);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -61,7 +61,7 @@ const Searchbar = () => {
 
   const addSearchKeywords = () => {
     if (searchTerm.trim() !== "") {
-      dispatch({ type: "ADD", value: searchTerm });
+      dispatch({ type: "ADD_SEARCH", value: searchTerm });
       setSearchTerm("");
     }
   };
