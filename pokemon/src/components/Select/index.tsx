@@ -1,54 +1,41 @@
-import { memo, useState } from "react";
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  Typography,
-} from "@mui/material";
+import { memo, useRef } from "react";
+import { Box, Typography } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-
-interface ItemProps {
-  label: string;
-}
+import CheckList from "../CheckList";
 
 interface SelectProps {
   title: string;
-  list: ItemProps[];
+  list: string[];
 }
 
 const Select = ({ title, list }: SelectProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  const toggleDropdown = () => {
+    if (dropdownRef.current) {
+      const isHidden = dropdownRef.current.style.display === "none";
+      dropdownRef.current.style.display = isHidden ? "block" : "none";
+    }
+  };
 
   return (
     <Box>
-      {/* Select Box */}
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         mb="8px"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleDropdown}
       >
         <Typography variant="subtitle1">{title}</Typography>
         <Box className="arrow">
-          {isOpen ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+          <ArrowDropDownIcon />
         </Box>
       </Box>
 
-      {/* Dropdown List */}
-      {isOpen && (
-        <FormGroup>
-          {list.map((item, index) => (
-            <FormControlLabel
-              key={index}
-              control={<Checkbox sx={{ p: "6px" }} />}
-              label={item.label}
-            />
-          ))}
-        </FormGroup>
-      )}
+      <Box ref={dropdownRef} style={{ display: "none" }}>
+        <CheckList list={list} />
+      </Box>
     </Box>
   );
 };
