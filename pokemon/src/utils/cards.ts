@@ -1,11 +1,25 @@
 import { LIST_SUBTYPE, LIST_SUPERTYPE, LIST_TYPE } from "../constants";
 
-export const queryParamsFromCheckList = (data: string[]) => {
-  if (data.length === 0 || undefined) return "";
+export const queryParamsFilter = (
+  searchValues?: string[],
+  checkList?: string[],
+  hpList?: string[]
+) => {
+  if (
+    (!searchValues || searchValues.length === 0) &&
+    (!checkList || checkList.length === 0) &&
+    (!hpList || hpList.length === 0)
+  ) {
+    return "";
+  }
+
+  const querySearch = searchValues
+    ?.map((value) => `name:*${value}*`)
+    .join(" OR ");
 
   const grouped: Record<string, string[]> = {};
 
-  data.forEach((item) => {
+  checkList?.forEach((item) => {
     let key: string | undefined;
     if (new Set(LIST_SUPERTYPE).has(item)) key = "supertype";
     if (new Set(LIST_SUBTYPE).has(item)) key = "subtypes";
@@ -17,7 +31,7 @@ export const queryParamsFromCheckList = (data: string[]) => {
     }
   });
 
-  const queryString = Object.entries(grouped)
+  const queryCheckList = Object.entries(grouped)
     .map(([key, values]) =>
       key === "supertype"
         ? values.map((v) => `${key}:${v}`).join(" OR ")
@@ -25,5 +39,12 @@ export const queryParamsFromCheckList = (data: string[]) => {
     )
     .join(" ");
 
-  return `q=${queryString}&`;
+  const queryHp =
+    hpList && hpList.length === 2 ? `hp:[${hpList[0]} to ${hpList[1]}]` : "";
+
+  return (
+    "q=" +
+    `${querySearch || ""} ${queryCheckList || ""} ${queryHp}`.trim() +
+    "&"
+  );
 };

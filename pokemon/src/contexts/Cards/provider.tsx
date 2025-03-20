@@ -5,6 +5,7 @@ import { Action, cardsReducer, CardsState } from "../../stores";
 
 type SearchContextType = string[];
 type CheckListContextType = string[];
+type FormFilterHPType = string[];
 
 export const CardsContext = createContext<CardsState | undefined>(undefined);
 
@@ -13,6 +14,10 @@ export const SearchContext = createContext<SearchContextType | undefined>(
 );
 
 export const CheckListContext = createContext<CheckListContextType | undefined>(
+  undefined
+);
+
+export const FilterHPContext = createContext<FormFilterHPType | undefined>(
   undefined
 );
 
@@ -25,20 +30,23 @@ const initialState: CardsState = {
   hasMore: true,
   searchValues: [],
   checkList: [],
+  hpList: [],
 };
 
 export const CardsProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(cardsReducer, initialState);
-  const { searchValues, checkList } = state;
+  const { searchValues, checkList, hpList } = state;
 
   return (
     <SearchContext value={searchValues}>
       <CheckListContext value={checkList}>
-        <CardsContext value={state}>
-          <CardsDispatchContext value={dispatch}>
-            {children}
-          </CardsDispatchContext>
-        </CardsContext>
+        <FilterHPContext value={hpList}>
+          <CardsContext value={state}>
+            <CardsDispatchContext value={dispatch}>
+              {children}
+            </CardsDispatchContext>
+          </CardsContext>
+        </FilterHPContext>
       </CheckListContext>
     </SearchContext>
   );

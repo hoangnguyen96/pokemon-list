@@ -11,7 +11,7 @@ import { getData } from "../../services";
 import { useListCard } from "../../hooks";
 
 // Utils
-import { queryParamsFromCheckList, generateSearchQuery } from "../../utils";
+import { queryParamsFilter } from "../../utils";
 
 // Contexts
 import { CardsDispatchContext } from "../../contexts";
@@ -20,7 +20,7 @@ import { CardsDispatchContext } from "../../contexts";
 import ItemCard from "../ItemCard";
 
 const ListCard = () => {
-  const { cards, page, loading, hasMore, searchValues, checkList } =
+  const { cards, page, loading, hasMore, searchValues, checkList, hpList } =
     useListCard();
   const dispatch = use(CardsDispatchContext);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -46,10 +46,10 @@ const ListCard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = `?${generateSearchQuery(
-          searchValues
-        )}${queryParamsFromCheckList(
-          checkList
+        const url = `?${queryParamsFilter(
+          searchValues,
+          checkList,
+          hpList
         )}page=${page}&pageSize=${PAGE_SIZE}`;
 
         const newCards = await getData(url);
@@ -70,7 +70,7 @@ const ListCard = () => {
     };
 
     fetchData();
-  }, [page, searchValues, checkList]);
+  }, [page, searchValues, checkList, hpList]);
 
   return (
     <Box
