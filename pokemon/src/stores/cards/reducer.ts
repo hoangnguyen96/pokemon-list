@@ -6,13 +6,16 @@ export interface CardsState {
   loading: boolean;
   hasMore: boolean;
   searchValues: string[];
+  checkList: string[];
 }
 
 export type Action =
   | { type: "SET_PAGE"; payload: number }
   | { type: "UPDATE_STATE"; payload: Partial<CardsState> }
   | { type: "ADD_SEARCH"; value: string }
-  | { type: "REMOVE_SEARCH"; value: string };
+  | { type: "REMOVE_SEARCH"; value: string }
+  | { type: "ADD_CHECK_LIST"; value: string }
+  | { type: "REMOVE_CHECK_LIST"; value: string };
 
 // Reducer function
 const cardsReducer = (state: CardsState, action: Action): CardsState => {
@@ -39,6 +42,22 @@ const cardsReducer = (state: CardsState, action: Action): CardsState => {
       return {
         ...state,
         searchValues: state.searchValues.filter((v) => v !== action.value),
+        page: 1,
+        loading: true,
+      };
+    case "ADD_CHECK_LIST":
+      return {
+        ...state,
+        checkList: [...state.checkList, action.value],
+        page: 1,
+        loading: true,
+      };
+    case "REMOVE_CHECK_LIST":
+      return {
+        ...state,
+        checkList: state.checkList.filter((v) => v !== action.value),
+        page: 1,
+        loading: true,
       };
 
     default:

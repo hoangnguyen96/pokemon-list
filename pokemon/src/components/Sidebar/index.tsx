@@ -2,13 +2,13 @@ import { memo } from "react";
 import { Box } from "@mui/material";
 
 // Constants
-import { LIST_SUBTYPE, LIST_TYPE } from "../../constants/types";
+import { LIST_SUBTYPE, LIST_SUPERTYPE, LIST_TYPE } from "../../constants/types";
 
 // Components
 import Select from "../Select";
 import KeywordsBox from "../KeywordsBox";
 import FormSearchHP from "../FormSearchHP";
-import SuperTypes from "../SuperTypes";
+import CheckList from "../CheckList";
 
 const Sidebar = () => (
   <Box
@@ -23,7 +23,7 @@ const Sidebar = () => (
     height="fit-content"
   >
     <KeywordsBox />
-    <SuperTypes />
+    <CheckList list={LIST_SUPERTYPE} />
     <Select title="Type" list={LIST_TYPE} />
     <Select title="Subtype" list={LIST_SUBTYPE} />
     <FormSearchHP />

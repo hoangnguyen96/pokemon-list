@@ -1,23 +1,5 @@
-export const LIST_TYPE = [
-  {
-    label: "Colorless",
-  },
-  {
-    label: "Darkness",
-  },
-  {
-    label: "Dragon",
-  },
-];
+export const LIST_TYPE = ["Colorless", "Darkness", "Dragon"];
 
-export const LIST_SUBTYPE = [
-  {
-    label: "BREAK",
-  },
-  {
-    label: "Baby",
-  },
-  {
-    label: "Basic",
-  },
-];
+export const LIST_SUBTYPE = ["BREAK", "Baby", "Basic"];
+
+export const LIST_SUPERTYPE = ["Pokémon", "Trainer", "Energy"];
