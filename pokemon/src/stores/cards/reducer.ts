@@ -7,6 +7,7 @@ export interface CardsState {
   hasMore: boolean;
   searchValues: string[];
   checkList: string[];
+  hpList: string[];
 }
 
 export type Action =
@@ -15,7 +16,8 @@ export type Action =
   | { type: "ADD_SEARCH"; value: string }
   | { type: "REMOVE_SEARCH"; value: string }
   | { type: "ADD_CHECK_LIST"; value: string }
-  | { type: "REMOVE_CHECK_LIST"; value: string };
+  | { type: "REMOVE_CHECK_LIST"; value: string }
+  | { type: "SET_HP_RANGE"; hpFrom: string; hpTo: string };
 
 // Reducer function
 const cardsReducer = (state: CardsState, action: Action): CardsState => {
@@ -56,6 +58,22 @@ const cardsReducer = (state: CardsState, action: Action): CardsState => {
       return {
         ...state,
         checkList: state.checkList.filter((v) => v !== action.value),
+        page: 1,
+        loading: true,
+      };
+    case "SET_HP_RANGE":
+      if (!action.hpFrom || !action.hpTo) {
+        return {
+          ...state,
+          hpList: [],
+          page: 1,
+          loading: true,
+        };
+      }
+
+      return {
+        ...state,
+        hpList: [action.hpFrom, action.hpTo],
         page: 1,
         loading: true,
       };
