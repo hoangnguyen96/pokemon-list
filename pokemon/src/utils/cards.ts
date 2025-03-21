@@ -1,50 +1,31 @@
-import { LIST_SUBTYPE, LIST_SUPERTYPE, LIST_TYPE } from "../constants";
+import { IFilterState } from "../stores";
 
 export const queryParamsFilter = (
-  searchValues?: string[],
-  checkList?: string[],
-  hpList?: string[]
+  filters: IFilterState,
+  hpRange: [number, number] | []
 ) => {
-  if (
-    (!searchValues || searchValues.length === 0) &&
-    (!checkList || checkList.length === 0) &&
-    (!hpList || hpList.length === 0)
-  ) {
-    return "";
-  }
-
-  const querySearch = searchValues
-    ?.map((value) => `name:*${value}*`)
-    .join(" OR ");
-
-  const grouped: Record<string, string[]> = {};
-
-  checkList?.forEach((item) => {
-    let key: string | undefined;
-    if (new Set(LIST_SUPERTYPE).has(item)) key = "supertype";
-    if (new Set(LIST_SUBTYPE).has(item)) key = "subtypes";
-    if (new Set(LIST_TYPE).has(item)) key = "types";
-
-    if (key) {
-      if (!grouped[key]) grouped[key] = [];
-      grouped[key].push(`"${item}"`);
-    }
-  });
-
-  const queryCheckList = Object.entries(grouped)
-    .map(([key, values]) =>
-      key === "supertype"
-        ? values.map((v) => `${key}:${v}`).join(" OR ")
-        : values.map((v) => `${key}:${v}`).join(" ")
-    )
-    .join(" ");
+  const { name, subtypes, supertype, types } = filters;
+  const queryName =
+    name.value.length > 0
+      ? name.value.map((value) => `name:*${value}*`).join(" OR ")
+      : "";
+  const querySupertype =
+    supertype.value.length > 0
+      ? supertype.value.map((value) => `supertype:"${value}"`).join(" OR ")
+      : "";
+  const querySubtypes =
+    subtypes.value.length > 0
+      ? subtypes.value.map((value) => `subtypes:"${value}"`).join(" ")
+      : "";
+  const queryTypes =
+    types.value.length > 0
+      ? types.value.map((value) => `types:"${value}"`).join(" ")
+      : "";
 
   const queryHp =
-    hpList && hpList.length === 2 ? `hp:[${hpList[0]} to ${hpList[1]}]` : "";
+    hpRange && hpRange.length === 2
+      ? `hp:[${hpRange[0]} to ${hpRange[1]}]`
+      : "";
 
-  return (
-    "q=" +
-    `${querySearch || ""} ${queryCheckList || ""} ${queryHp}`.trim() +
-    "&"
-  );
+  return `${queryName} ${querySupertype} ${querySubtypes} ${queryTypes} ${queryHp}`.trim();
 };

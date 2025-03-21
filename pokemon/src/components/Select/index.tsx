@@ -1,14 +1,16 @@
 import { memo, useRef } from "react";
 import { Box, Typography } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { KEYS_FILTER } from "../../stores";
 import CheckList from "../CheckList";
 
 interface SelectProps {
   title: string;
+  keyFilter: KEYS_FILTER;
   list: string[];
 }
 
-const Select = ({ title, list }: SelectProps) => {
+const Select = ({ title, keyFilter, list }: SelectProps) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const toggleDropdown = () => {
@@ -34,7 +36,7 @@ const Select = ({ title, list }: SelectProps) => {
       </Box>
 
       <Box ref={dropdownRef} style={{ display: "none" }}>
-        <CheckList list={list} />
+        <CheckList list={list} keyFilter={keyFilter} />
       </Box>
     </Box>
   );

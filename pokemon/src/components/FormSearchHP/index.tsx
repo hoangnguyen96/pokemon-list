@@ -1,19 +1,24 @@
 import { memo, use, useEffect, useState } from "react";
 import { Box, FormControl, OutlinedInput, Typography } from "@mui/material";
 import { CardsDispatchContext } from "../../contexts";
+import { CARDS_ACTIONS } from "../../stores";
 
 const FormSearchHP = () => {
-  const [from, setFrom] = useState("");
-  const [to, setTo] = useState("");
+  const [from, setFrom] = useState<number>(0);
+  const [to, setTo] = useState<number>(0);
   const dispatch = use(CardsDispatchContext);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (from !== "" && to !== "") {
+      if (from !== undefined && to !== undefined) {
         if (Number(from) > Number(to)) {
           setFrom(to);
         } else {
-          dispatch({ type: "SET_HP_RANGE", hpFrom: from, hpTo: to });
+          dispatch({
+            type: CARDS_ACTIONS.SET_HP_RANGE,
+            hpFrom: from,
+            hpTo: to,
+          });
         }
       }
     }, 500);
@@ -22,20 +27,23 @@ const FormSearchHP = () => {
   }, [from, to, dispatch]);
 
   const handleChange =
-    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (setter: React.Dispatch<React.SetStateAction<number>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       if (/^\d*$/.test(value)) {
-        setter(value);
+        setter(Number(value));
       }
     };
 
   useEffect(() => {
-    if ((from !== "" && to === "") || (from === "" && to !== "")) {
+    if (
+      (from !== undefined && to === undefined) ||
+      (from === undefined && to !== undefined)
+    ) {
       const timeout = setTimeout(() => {
-        setFrom("");
-        setTo("");
-        dispatch({ type: "SET_HP_RANGE", hpFrom: "", hpTo: "" });
+        setFrom(0);
+        setTo(0);
+        dispatch({ type: CARDS_ACTIONS.SET_HP_RANGE, hpFrom: 0, hpTo: 0 });
       }, 3000);
 
       return () => clearTimeout(timeout);
@@ -43,8 +51,8 @@ const FormSearchHP = () => {
   }, [from, to, dispatch]);
 
   useEffect(() => {
-    if (from === "" && to === "") {
-      dispatch({ type: "SET_HP_RANGE", hpFrom: "", hpTo: "" });
+    if (from === undefined && to === undefined) {
+      dispatch({ type: CARDS_ACTIONS.SET_HP_RANGE, hpFrom: 0, hpTo: 0 });
     }
   }, [from, to, dispatch]);
 
