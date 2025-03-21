@@ -1,8 +1,14 @@
 import { memo, use } from "react";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { CardsDispatchContext } from "../../contexts";
+import { CARDS_ACTIONS, KEYS_FILTER } from "../../stores";
 
-const CheckList = ({ list }: { list: string[] }) => {
+interface CheckListProps {
+  list: string[];
+  keyFilter: KEYS_FILTER;
+}
+
+const CheckList = ({ keyFilter, list }: CheckListProps) => {
   const dispatch = use(CardsDispatchContext);
 
   const handleClick = (
@@ -10,9 +16,17 @@ const CheckList = ({ list }: { list: string[] }) => {
     value: string
   ) => {
     if (event.target.checked) {
-      dispatch({ type: "ADD_CHECK_LIST", value });
+      dispatch({
+        type: CARDS_ACTIONS.ADD_FILTER_VALUE,
+        filterKey: keyFilter,
+        value,
+      });
     } else {
-      dispatch({ type: "REMOVE_CHECK_LIST", value });
+      dispatch({
+        type: CARDS_ACTIONS.REMOVE_FILTER_VALUE,
+        filterKey: keyFilter,
+        value,
+      });
     }
   };
 

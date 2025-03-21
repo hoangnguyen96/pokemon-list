@@ -2,6 +2,9 @@ import { memo, use, useState } from "react";
 import { alpha, InputBase, styled } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
+// Stores
+import { CARDS_ACTIONS, KEYS_FILTER } from "../../stores";
+
 // Context
 import { CardsDispatchContext } from "../../contexts";
 
@@ -61,7 +64,11 @@ const Searchbar = () => {
 
   const addSearchKeywords = () => {
     if (searchTerm.trim() !== "") {
-      dispatch({ type: "ADD_SEARCH", value: searchTerm });
+      dispatch({
+        type: CARDS_ACTIONS.ADD_FILTER_VALUE,
+        filterKey: KEYS_FILTER.NAME,
+        value: searchTerm,
+      });
       setSearchTerm("");
     }
   };

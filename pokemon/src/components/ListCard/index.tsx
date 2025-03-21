@@ -16,12 +16,15 @@ import { queryParamsFilter } from "../../utils";
 // Contexts
 import { CardsDispatchContext } from "../../contexts";
 
+// Stores
+import { CARDS_ACTIONS } from "../../stores";
+
 // Components
 import ItemCard from "../ItemCard";
 
 const ListCard = () => {
-  const { cards, page, loading, hasMore, searchValues, checkList, hpList } =
-    useListCard();
+  const { cards, page, loading, hasMore, filters, hpRange } = useListCard();
+  const { name, subtypes, supertype, types } = filters;
   const dispatch = use(CardsDispatchContext);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -31,7 +34,7 @@ const ListCard = () => {
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
 
     if (scrollTop + clientHeight >= scrollHeight - 100) {
-      dispatch({ type: "SET_PAGE", payload: Number(page + 1) });
+      dispatch({ type: CARDS_ACTIONS.SET_PAGE, payload: Number(page + 1) });
     }
   }, [loading, hasMore, dispatch]);
 
@@ -45,17 +48,18 @@ const ListCard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const url = `?${queryParamsFilter(
-          searchValues,
-          checkList,
-          hpList
-        )}page=${page}&pageSize=${PAGE_SIZE}`;
+      const paramsObj = {
+        q: queryParamsFilter(filters, hpRange),
+        page: String(page),
+        pageSize: String(PAGE_SIZE),
+      };
+      const searchParams = new URLSearchParams(paramsObj);
 
-        const newCards = await getData(url);
+      try {
+        const newCards = await getData(`?${searchParams}`);
 
         dispatch({
-          type: "UPDATE_STATE",
+          type: CARDS_ACTIONS.UPDATE_STATE,
           payload: {
             cards: page === 1 ? newCards : [...cards, ...newCards],
             hasMore: newCards.length >= PAGE_SIZE,
@@ -66,11 +70,14 @@ const ListCard = () => {
         console.error("Error fetching cards:", error);
       }
 
-      dispatch({ type: "UPDATE_STATE", payload: { loading: false } });
+      dispatch({
+        type: CARDS_ACTIONS.UPDATE_STATE,
+        payload: { loading: false },
+      });
     };
 
     fetchData();
-  }, [page, searchValues, checkList, hpList]);
+  }, [page, name, subtypes, supertype, types]);
 
   return (
     <Box
