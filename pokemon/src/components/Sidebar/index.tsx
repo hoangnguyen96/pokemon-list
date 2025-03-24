@@ -4,9 +4,6 @@ import { Box } from "@mui/material";
 // Constants
 import { LIST_SUBTYPE, LIST_SUPERTYPE, LIST_TYPE } from "../../constants/types";
 
-// Stores
-import { KEYS_FILTER } from "../../stores";
-
 // Components
 import Select from "../Select";
 import KeywordsBox from "../KeywordsBox";
@@ -26,13 +23,9 @@ const Sidebar = () => (
     height="fit-content"
   >
     <KeywordsBox />
-    <CheckList list={LIST_SUPERTYPE} keyFilter={KEYS_FILTER.SUPER_TYPE} />
-    <Select title="Type" list={LIST_TYPE} keyFilter={KEYS_FILTER.TYPES} />
-    <Select
-      title="Subtype"
-      list={LIST_SUBTYPE}
-      keyFilter={KEYS_FILTER.SUB_TYPES}
-    />
+    <CheckList list={LIST_SUPERTYPE} keyFilter="supertype" />
+    <Select title="Type" list={LIST_TYPE} keyFilter="types" />
+    <Select title="Subtype" list={LIST_SUBTYPE} keyFilter="subtypes" />
     <FormSearchHP />
   </Box>
 );

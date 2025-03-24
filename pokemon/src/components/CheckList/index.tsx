@@ -1,11 +1,11 @@
 import { memo, use } from "react";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { CardsDispatchContext } from "../../contexts";
-import { CARDS_ACTIONS, KEYS_FILTER } from "../../stores";
+import { CARDS_ACTIONS, IFilterState } from "../../stores";
 
 interface CheckListProps {
   list: string[];
-  keyFilter: KEYS_FILTER;
+  keyFilter: keyof IFilterState;
 }
 
 const CheckList = ({ keyFilter, list }: CheckListProps) => {

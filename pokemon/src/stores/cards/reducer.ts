@@ -1,29 +1,10 @@
 import { ICard } from "../../interfaces";
 
-export enum KEYS_FILTER {
-  NAME = "name",
-  TYPES = "types",
-  SUPER_TYPE = "supertype",
-  SUB_TYPES = "subtypes",
-}
-
 export interface IFilterState {
-  name: {
-    valueType: KEYS_FILTER.NAME;
-    value: string[];
-  };
-  types: {
-    valueType: KEYS_FILTER.TYPES;
-    value: string[];
-  };
-  supertype: {
-    valueType: KEYS_FILTER.SUPER_TYPE;
-    value: string[];
-  };
-  subtypes: {
-    valueType: KEYS_FILTER.SUB_TYPES;
-    value: string[];
-  };
+  name: string[];
+  types: string[];
+  supertype: string[];
+  subtypes: string[];
 }
 
 export interface CardsState {
@@ -34,8 +15,6 @@ export interface CardsState {
   filters: IFilterState;
   hpRange: [number, number] | [];
 }
-
-type FilterKeys = IFilterState[keyof IFilterState]["valueType"];
 
 export enum CARDS_ACTIONS {
   SET_PAGE = "SET_PAGE",
@@ -50,12 +29,12 @@ export type Action =
   | { type: CARDS_ACTIONS.UPDATE_STATE; payload: Partial<CardsState> }
   | {
       type: CARDS_ACTIONS.ADD_FILTER_VALUE;
-      filterKey: FilterKeys;
+      filterKey: keyof IFilterState;
       value: string;
     }
   | {
       type: CARDS_ACTIONS.REMOVE_FILTER_VALUE;
-      filterKey: FilterKeys;
+      filterKey: keyof IFilterState;
       value: string;
     }
   | { type: CARDS_ACTIONS.SET_HP_RANGE; hpFrom: number; hpTo: number };
@@ -70,18 +49,15 @@ const cardsReducer = (state: CardsState, action: Action): CardsState => {
       return { ...state, ...action.payload };
 
     case CARDS_ACTIONS.ADD_FILTER_VALUE: {
-      const filterValues = state.filters[action.filterKey].value;
+      const filterValues = state.filters[action.filterKey];
 
       return {
         ...state,
         filters: {
           ...state.filters,
-          [action.filterKey]: {
-            ...state.filters[action.filterKey],
-            value: filterValues.includes(action.value)
-              ? filterValues
-              : [...filterValues, action.value],
-          },
+          [action.filterKey]: filterValues.includes(action.value)
+            ? filterValues
+            : [...filterValues, action.value],
         },
         page: 1,
         loading: true,
@@ -89,16 +65,15 @@ const cardsReducer = (state: CardsState, action: Action): CardsState => {
     }
 
     case CARDS_ACTIONS.REMOVE_FILTER_VALUE: {
-      const filterValues = state.filters[action.filterKey].value;
+      const filterValues = state.filters[action.filterKey];
 
       return {
         ...state,
         filters: {
           ...state.filters,
-          [action.filterKey]: {
-            ...state.filters[action.filterKey],
-            value: filterValues.filter((val) => val !== action.value),
-          },
+          [action.filterKey]: filterValues.filter(
+            (val) => val !== action.value
+          ),
         },
         page: 1,
         loading: true,
