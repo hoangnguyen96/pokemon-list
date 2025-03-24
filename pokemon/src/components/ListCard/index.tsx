@@ -77,7 +77,7 @@ const ListCard = () => {
     };
 
     fetchData();
-  }, [page, name, subtypes, supertype, types]);
+  }, [page, name, subtypes, supertype, types, hpRange]);
 
   return (
     <Box

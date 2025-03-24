@@ -1,60 +1,48 @@
-import { memo, use, useEffect, useState } from "react";
-import { Box, FormControl, OutlinedInput, Typography } from "@mui/material";
-import { CardsDispatchContext } from "../../contexts";
+import { memo, use, useState } from "react";
+import {
+  Box,
+  Button,
+  FormControl,
+  OutlinedInput,
+  Typography,
+} from "@mui/material";
+import { CardsDispatchContext, FilterHPContext } from "../../contexts";
 import { CARDS_ACTIONS } from "../../stores";
 
 const FormSearchHP = () => {
-  const [from, setFrom] = useState<number>(0);
-  const [to, setTo] = useState<number>(0);
+  const hpRange = use(FilterHPContext);
+  const [from, setFrom] = useState<number | undefined>(hpRange[0] || undefined);
+  const [to, setTo] = useState<number | undefined>(hpRange[1] || undefined);
+  const [error, setError] = useState(false);
   const dispatch = use(CardsDispatchContext);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (from !== undefined && to !== undefined) {
-        if (Number(from) > Number(to)) {
-          setFrom(to);
-        } else {
-          dispatch({
-            type: CARDS_ACTIONS.SET_HP_RANGE,
-            hpFrom: from,
-            hpTo: to,
-          });
-        }
-      }
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [from, to, dispatch]);
-
   const handleChange =
-    (setter: React.Dispatch<React.SetStateAction<number>>) =>
+    (setter: React.Dispatch<React.SetStateAction<number | undefined>>) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       if (/^\d*$/.test(value)) {
         setter(Number(value));
+        setError(false);
       }
     };
 
-  useEffect(() => {
-    if (
-      (from !== undefined && to === undefined) ||
-      (from === undefined && to !== undefined)
-    ) {
-      const timeout = setTimeout(() => {
-        setFrom(0);
-        setTo(0);
-        dispatch({ type: CARDS_ACTIONS.SET_HP_RANGE, hpFrom: 0, hpTo: 0 });
-      }, 3000);
+  const handleApplyHP = () => {
+    const fromNum = Number(from || 0);
+    const toNum = Number(to || 0);
 
-      return () => clearTimeout(timeout);
+    if (fromNum > toNum) {
+      setError(true);
+    } else {
+      setError(false);
+      if (fromNum !== hpRange[0] || toNum !== hpRange[1]) {
+        dispatch({
+          type: CARDS_ACTIONS.SET_HP_RANGE,
+          hpFrom: fromNum,
+          hpTo: toNum,
+        });
+      }
     }
-  }, [from, to, dispatch]);
-
-  useEffect(() => {
-    if (from === undefined && to === undefined) {
-      dispatch({ type: CARDS_ACTIONS.SET_HP_RANGE, hpFrom: 0, hpTo: 0 });
-    }
-  }, [from, to, dispatch]);
+  };
 
   return (
     <Box>
@@ -65,23 +53,43 @@ const FormSearchHP = () => {
         <FormControl sx={{ maxWidth: "90px" }}>
           <OutlinedInput
             placeholder="From"
-            value={from}
+            value={from !== undefined ? from : ""}
             type="text"
             onChange={handleChange(setFrom)}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+            sx={{
+              borderColor: error ? "red" : "inherit",
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: error ? "red" : "inherit",
+              },
+            }}
           />
         </FormControl>
         <Typography>-</Typography>
         <FormControl sx={{ maxWidth: "90px" }}>
           <OutlinedInput
             placeholder="To"
-            value={to}
+            value={to !== undefined ? to : ""}
             type="text"
             onChange={handleChange(setTo)}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
           />
         </FormControl>
       </Box>
+      {error && (
+        <Typography color="red" fontSize="14px">
+          "From" value cannot be greater than "To"!
+        </Typography>
+      )}
+
+      <Button
+        variant="contained"
+        sx={{ width: "100%", mt: "20px" }}
+        disabled={from === undefined || to === undefined}
+        onClick={handleApplyHP}
+      >
+        Apply HP
+      </Button>
     </Box>
   );
 };

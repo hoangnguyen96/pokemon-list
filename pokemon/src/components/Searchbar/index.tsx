@@ -3,7 +3,7 @@ import { alpha, InputBase, styled } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 // Stores
-import { CARDS_ACTIONS, KEYS_FILTER } from "../../stores";
+import { CARDS_ACTIONS } from "../../stores";
 
 // Context
 import { CardsDispatchContext } from "../../contexts";
@@ -66,7 +66,7 @@ const Searchbar = () => {
     if (searchTerm.trim() !== "") {
       dispatch({
         type: CARDS_ACTIONS.ADD_FILTER_VALUE,
-        filterKey: KEYS_FILTER.NAME,
+        filterKey: "name",
         value: searchTerm,
       });
       setSearchTerm("");

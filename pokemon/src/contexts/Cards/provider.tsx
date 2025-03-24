@@ -1,7 +1,7 @@
 import { createContext, Dispatch, ReactNode, useReducer } from "react";
 
 // Stores
-import { Action, cardsReducer, CardsState, KEYS_FILTER } from "../../stores";
+import { Action, cardsReducer, CardsState } from "../../stores";
 
 type FormFilterHPType = [number, number];
 
@@ -31,10 +31,10 @@ const initialState: CardsState = {
   loading: true,
   hasMore: true,
   filters: {
-    types: { valueType: KEYS_FILTER.TYPES, value: [] },
-    supertype: { valueType: KEYS_FILTER.SUPER_TYPE, value: [] },
-    subtypes: { valueType: KEYS_FILTER.SUB_TYPES, value: [] },
-    name: { valueType: KEYS_FILTER.NAME, value: [] },
+    types: [],
+    supertype: [],
+    subtypes: [],
+    name: [],
   },
   hpRange: [],
 };
@@ -45,10 +45,10 @@ export const CardsProvider = ({ children }: { children: ReactNode }) => {
   const { name, subtypes, supertype, types } = filters;
 
   return (
-    <FilterNameContext value={name.value}>
-      <FilterSupertypeContext value={supertype.value}>
-        <FilterSubtypesContext value={subtypes.value}>
-          <FilterTypesContext value={types.value}>
+    <FilterNameContext value={name}>
+      <FilterSupertypeContext value={supertype}>
+        <FilterSubtypesContext value={subtypes}>
+          <FilterTypesContext value={types}>
             <FilterHPContext value={hpRange}>
               <CardsContext value={state}>
                 <CardsDispatchContext value={dispatch}>

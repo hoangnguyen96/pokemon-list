@@ -3,7 +3,7 @@ import { Box, Chip, Paper, styled, Typography } from "@mui/material";
 
 // Context
 import { CardsDispatchContext, FilterNameContext } from "../../contexts";
-import { CARDS_ACTIONS, KEYS_FILTER } from "../../stores";
+import { CARDS_ACTIONS } from "../../stores";
 
 const ListItem = styled("li")(({ theme }) => ({
   margin: theme.spacing(0.5),
@@ -16,7 +16,7 @@ const KeywordsBox = () => {
   const handleDelete = (value: string) => {
     dispatch({
       type: CARDS_ACTIONS.REMOVE_FILTER_VALUE,
-      filterKey: KEYS_FILTER.NAME,
+      filterKey: "name",
       value,
     });
   };

@@ -1,12 +1,12 @@
 import { memo, useRef } from "react";
 import { Box, Typography } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { KEYS_FILTER } from "../../stores";
 import CheckList from "../CheckList";
+import { IFilterState } from "../../stores";
 
 interface SelectProps {
   title: string;
-  keyFilter: KEYS_FILTER;
+  keyFilter: keyof IFilterState;
   list: string[];
 }
 
