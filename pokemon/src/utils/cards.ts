@@ -1,3 +1,4 @@
+import { ICard } from "../interfaces";
 import { IFilterState } from "../stores";
 
 export const queryParamsFilter = (
@@ -28,4 +29,11 @@ export const queryParamsFilter = (
       : "";
 
   return `${queryParts.filter(Boolean).join(" ")} ${queryHp}`.trim();
+};
+
+export const transformData = (list: ICard[]) => {
+  return list.reduce((result: Record<string, ICard>, item) => {
+    result[item.id] = item;
+    return result;
+  }, {});
 };

@@ -8,7 +8,8 @@ export interface IFilterState {
 }
 
 export interface CardsState {
-  cards: ICard[];
+  cards: Record<string, ICard>;
+  orderIds: string[];
   page: number;
   loading: boolean;
   hasMore: boolean;

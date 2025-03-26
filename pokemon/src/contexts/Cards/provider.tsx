@@ -26,7 +26,8 @@ export const FilterHPContext = createContext<FormFilterHPType | []>([]);
 export const CardsDispatchContext = createContext<Dispatch<Action>>(() => {});
 
 const initialState: CardsState = {
-  cards: [],
+  cards: {},
+  orderIds: [],
   page: 1,
   loading: true,
   hasMore: true,
