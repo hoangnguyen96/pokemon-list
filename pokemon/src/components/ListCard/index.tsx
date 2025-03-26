@@ -1,5 +1,18 @@
 import { use, useCallback, useEffect, useRef } from "react";
 import { Box, CircularProgress } from "@mui/material";
+import {
+  DndContext,
+  closestCenter,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  rectSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
 
 // Constants
 import { PAGE_SIZE } from "../../constants";
@@ -11,7 +24,7 @@ import { getData } from "../../services";
 import { useListCard } from "../../hooks";
 
 // Utils
-import { queryParamsFilter } from "../../utils";
+import { queryParamsFilter, transformData } from "../../utils";
 
 // Contexts
 import { CardsDispatchContext } from "../../contexts";
@@ -20,13 +33,23 @@ import { CardsDispatchContext } from "../../contexts";
 import { CARDS_ACTIONS } from "../../stores";
 
 // Components
+import { ICard } from "../../interfaces";
 import ItemCard from "../ItemCard";
+import DraggableItem from "../DraggableItem";
 
 const ListCard = () => {
-  const { cards, page, loading, hasMore, filters, hpRange } = useListCard();
+  const { cards, orderIds, page, loading, hasMore, filters, hpRange } =
+    useListCard();
   const { name, subtypes, supertype, types } = filters;
   const dispatch = use(CardsDispatchContext);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    })
+  );
 
   const handleScroll = useCallback(() => {
     if (loading || !hasMore || !containerRef.current) return;
@@ -61,7 +84,11 @@ const ListCard = () => {
         dispatch({
           type: CARDS_ACTIONS.UPDATE_STATE,
           payload: {
-            cards: page === 1 ? newCards : [...cards, ...newCards],
+            cards:
+              page === 1
+                ? transformData(newCards)
+                : { ...cards, ...transformData(newCards) },
+            orderIds: newCards.map((item: ICard) => item.id),
             hasMore: newCards.length >= PAGE_SIZE,
             loading: false,
           },
@@ -79,26 +106,52 @@ const ListCard = () => {
     fetchData();
   }, [page, name, subtypes, supertype, types, hpRange]);
 
-  return (
-    <Box
-      ref={containerRef}
-      display="flex"
-      flexDirection="column"
-      width="100%"
-      height="85vh"
-      overflow="hidden scroll"
-    >
-      <Box display="flex" gap="24px" flexWrap="wrap" padding="12px">
-        {cards.map((card) => (
-          <ItemCard key={card.id} card={card} />
-        ))}
-      </Box>
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
 
-      {/* Loading Indicator */}
-      {loading && (
-        <CircularProgress sx={{ mt: "32px", mx: "auto", color: "white" }} />
-      )}
-    </Box>
+    if (active.id !== over?.id) {
+      const oldIndex = orderIds.findIndex((id) => id === active.id);
+      const newIndex = orderIds.findIndex((id) => id === over?.id);
+
+      const reorderedOrderIds = arrayMove(orderIds, oldIndex, newIndex);
+
+      dispatch({
+        type: CARDS_ACTIONS.UPDATE_STATE,
+        payload: { orderIds: reorderedOrderIds },
+      });
+    }
+  };
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext items={orderIds} strategy={rectSortingStrategy}>
+        <Box
+          ref={containerRef}
+          display="flex"
+          flexDirection="column"
+          width="100%"
+          height="85vh"
+          overflow="hidden scroll"
+        >
+          <Box display="flex" gap="24px" flexWrap="wrap" padding="12px">
+            {orderIds.map((id) => (
+              <DraggableItem key={id} id={id}>
+                <ItemCard card={cards[id]} />
+              </DraggableItem>
+            ))}
+          </Box>
+
+          {/* Loading Indicator */}
+          {loading && (
+            <CircularProgress sx={{ mt: "32px", mx: "auto", color: "white" }} />
+          )}
+        </Box>
+      </SortableContext>
+    </DndContext>
   );
 };
 
