@@ -88,7 +88,10 @@ const ListCard = () => {
               page === 1
                 ? transformData(newCards)
                 : { ...cards, ...transformData(newCards) },
-            orderIds: newCards.map((item: ICard) => item.id),
+            orderIds:
+              page === 1
+                ? newCards.map((item: ICard) => item.id)
+                : [...orderIds, ...newCards.map((item: ICard) => item.id)],
             hasMore: newCards.length >= PAGE_SIZE,
             loading: false,
           },

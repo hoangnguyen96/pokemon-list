@@ -73,6 +73,12 @@ const FormSearchHP = () => {
             type="text"
             onChange={handleChange(setTo)}
             inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+            sx={{
+              borderColor: "inherit",
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "inherit",
+              },
+            }}
           />
         </FormControl>
       </Box>
