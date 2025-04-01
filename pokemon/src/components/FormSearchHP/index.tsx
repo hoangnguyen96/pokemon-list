@@ -1,4 +1,4 @@
-import { memo, use, useState } from "react";
+import { use, useState } from "react";
 import {
   Box,
   Button,
@@ -100,4 +100,4 @@ const FormSearchHP = () => {
   );
 };
 
-export default memo(FormSearchHP);
+export default FormSearchHP;

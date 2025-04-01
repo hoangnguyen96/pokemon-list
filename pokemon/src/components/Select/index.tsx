@@ -1,4 +1,4 @@
-import { memo, useRef } from "react";
+import { useRef } from "react";
 import { Box, Typography } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import CheckList from "../CheckList";
@@ -42,4 +42,4 @@ const Select = ({ title, keyFilter, list }: SelectProps) => {
   );
 };
 
-export default memo(Select);
+export default Select;

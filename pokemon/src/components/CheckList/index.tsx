@@ -1,4 +1,4 @@
-import { memo, use } from "react";
+import { use } from "react";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import { CardsDispatchContext } from "../../contexts";
 import { CARDS_ACTIONS, IFilterState } from "../../stores";
@@ -48,4 +48,4 @@ const CheckList = ({ keyFilter, list }: CheckListProps) => {
   );
 };
 
-export default memo(CheckList);
+export default CheckList;
