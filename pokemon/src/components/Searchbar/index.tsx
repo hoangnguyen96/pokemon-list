@@ -1,4 +1,4 @@
-import { memo, use, useState } from "react";
+import { use, useState } from "react";
 import { alpha, InputBase, styled } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -89,4 +89,4 @@ const Searchbar = () => {
   );
 };
 
-export default memo(Searchbar);
+export default Searchbar;

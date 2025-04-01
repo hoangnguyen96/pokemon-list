@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { Box } from "@mui/material";
 
 // Constants
@@ -30,4 +29,4 @@ const Sidebar = () => (
   </Box>
 );
 
-export default memo(Sidebar);
+export default Sidebar;
